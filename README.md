@@ -1,3 +1,5 @@
+![Fraud Detection](Fraud_detection_logo.png)
+
 # Automatic Fraud Detection
 
 Projet réalisé dans le cadre du bloc 3 de la certification AIA (Jedha).
@@ -42,9 +44,11 @@ Un DAG se déclenche toutes les heures et enchaîne 4 tâches. Le tout tourne da
 ```
 Bloc-3/
 ├── docs/
-│   └── automatic-fraud-detection.md   # Énoncé du projet
+│   ├── automatic-fraud-detection.md   # Énoncé du projet
+│   └── fraud_detection_pipeline.svg   # Schéma du pipeline
 ├── training/
-│   └── train_model.py                 # Entraînement + enregistrement MLflow
+│   ├── train_model.py                 # Entraînement + enregistrement MLflow
+│   └── fraud_detector.joblib          # Modèle entraîné (export local)
 ├── airflow/
 │   ├── dags/
 │   │   └── fraud_detection_dag.py     # DAG Airflow (4 tâches)
@@ -52,6 +56,7 @@ Bloc-3/
 │   ├── docker-compose.yml
 │   ├── requirements.txt
 │   └── LANCER_AIRFLOW.md              # Guide de démarrage rapide
+├── Fraud_detection_logo.png
 └── README.md
 ```
 
