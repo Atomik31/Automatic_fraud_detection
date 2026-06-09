@@ -14,7 +14,10 @@ x-airflow-common: &airflow-common
     MLFLOW_TRACKING_URI: ${MLFLOW_TRACKING_URI:-https://atomik31-mlflow.hf.space}
     MODEL_NAME: ${MODEL_NAME:-fraud_detector}
     MODEL_ALIAS: ${MODEL_ALIAS:-production}
-    NEON_CONN: ${NEON_CONN}
+    AIRFLOW_VAR_NEON_CONN: ${NEON_CONN}
+    AIRFLOW_VAR_MLFLOW_TRACKING_URI: ${MLFLOW_TRACKING_URI:-https://atomik31-mlflow.hf.space}
+    AIRFLOW_VAR_MODEL_NAME: ${MODEL_NAME:-fraud_detector}
+    AIRFLOW_VAR_MODEL_ALIAS: ${MODEL_ALIAS:-production}
     AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
     AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
   volumes:

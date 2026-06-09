@@ -26,6 +26,10 @@ Un DAG se déclenche toutes les heures et enchaîne 4 tâches. Le tout tourne da
 
 ![Pipeline fraud detection](docs/fraud_detection_pipeline.svg)
 
+### Demo DAG
+
+[Voir la démo du DAG en action](DAG_demo.mov)
+
 ---
 
 ## Stack

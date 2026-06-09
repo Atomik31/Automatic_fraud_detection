@@ -26,7 +26,7 @@ import psycopg2
 import requests
 from airflow import DAG
 from airflow.models import Variable
-from airflow.providers.standard.operators.python import PythonOperator
+from airflow.operators.python import PythonOperator
 from psycopg2.extras import execute_values
 
 # ── Config ────────────────────────────────────────────────────────────────────
