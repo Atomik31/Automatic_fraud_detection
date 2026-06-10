@@ -162,6 +162,7 @@ def infer_fraud(**context):
 
 #  TÂCHE 4 — Stockage dans NeonDB
 
+
 def store_predictions(**context):
     """Insère les prédictions dans la table fraud_predictions de NeonDB."""
     predictions_json = context["ti"].xcom_pull(key="predictions", task_ids="infer_fraud")
@@ -203,6 +204,33 @@ def store_predictions(**context):
     print(f"[store_predictions] {len(df)} ligne(s) inseree(s) | {fraud_count} fraude(s).")
 
 
+#  TÂCHE 5 — Notification Slack
+
+def notify_fraud(**context):
+    """Envoie une alerte Slack si des fraudes ont été détectées."""
+    predictions_json = context["ti"].xcom_pull(key="predictions", task_ids="infer_fraud")
+    df = pd.read_json(StringIO(predictions_json))
+
+    fraud_count = int(df["is_fraud_predicted"].sum())
+    if fraud_count == 0:
+        print("[notify_fraud] Aucune fraude détectée — pas de notification.")
+        return
+
+    webhook_url = os.environ.get("SLACK_WEBHOOK_URL")
+    if not webhook_url:
+        print("[notify_fraud] SLACK_WEBHOOK_URL non défini — notification ignorée.")
+        return
+
+    message = (
+        f":rotating_light: *{fraud_count} fraude(s) détectée(s)* "
+        f"sur {len(df)} transactions analysées "
+        f"({datetime.utcnow().strftime('%Y-%m-%d %H:%M')} UTC)"
+    )
+    response = requests.post(webhook_url, json={"text": message}, timeout=10)
+    response.raise_for_status()
+    print(f"[notify_fraud] Notification Slack envoyée ({fraud_count} fraude(s)).")
+
+
 #  DAG
 
 with DAG(
@@ -216,9 +244,10 @@ with DAG(
     tags=["fraud", "mlflow", "neondb", "great_expectations"],
 ) as dag:
 
-    t_fetch = PythonOperator(task_id="fetch_data",        python_callable=fetch_data)
-    t_validate = PythonOperator(task_id="validate_schema", python_callable=validate_schema)
-    t_infer = PythonOperator(task_id="infer_fraud",        python_callable=infer_fraud)
-    t_store = PythonOperator(task_id="store_predictions",  python_callable=store_predictions)
+    t_fetch    = PythonOperator(task_id="fetch_data",        python_callable=fetch_data)
+    t_validate = PythonOperator(task_id="validate_schema",  python_callable=validate_schema)
+    t_infer    = PythonOperator(task_id="infer_fraud",       python_callable=infer_fraud)
+    t_store    = PythonOperator(task_id="store_predictions", python_callable=store_predictions)
+    t_notify   = PythonOperator(task_id="notify_fraud",      python_callable=notify_fraud)
 
-    t_fetch >> t_validate >> t_infer >> t_store
+    t_fetch >> t_validate >> t_infer >> t_store >> t_notify

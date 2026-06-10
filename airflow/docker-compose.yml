@@ -20,6 +20,7 @@ x-airflow-common: &airflow-common
     AIRFLOW_VAR_MODEL_ALIAS: ${MODEL_ALIAS:-production}
     AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
     AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+    SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL}
   volumes:
     - ./dags:/opt/airflow/dags
     - airflow_logs:/opt/airflow/logs

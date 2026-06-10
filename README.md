@@ -22,7 +22,11 @@ Le modèle est enregistré dans MLflow avec l'alias `@production`.
 
 **Pipeline de serving — DAG Airflow**
 
-Un DAG se déclenche toutes les heures et enchaîne 4 tâches. Le tout tourne dans Docker avec LocalExecutor.
+Un DAG se déclenche toutes les heures et enchaîne 5 tâches. Le tout tourne dans Docker avec LocalExecutor.
+
+**Notification Slack**
+
+Dès qu'une fraude est détectée, une alerte est envoyée automatiquement dans un channel Slack dédié (`#fraud-alerts`) via webhook entrant. Le message indique le nombre de fraudes détectées, le volume total de transactions analysées et l'heure UTC de l'analyse.
 
 ![Pipeline fraud detection](docs/fraud_detection_pipeline.svg)
 
@@ -40,6 +44,7 @@ Un DAG se déclenche toutes les heures et enchaîne 4 tâches. Le tout tourne da
 - MLflow Model Registry (HuggingFace Space)
 - NeonDB (PostgreSQL managé)
 - AWS S3 (stockage des artefacts MLflow)
+- Slack (notifications webhook)
 
 ---
 
@@ -55,7 +60,7 @@ Bloc-3/
 │   └── fraud_detector.joblib          # Modèle entraîné (export local)
 ├── airflow/
 │   ├── dags/
-│   │   └── fraud_detection_dag.py     # DAG Airflow (4 tâches)
+│   │   └── fraud_detection_dag.py     # DAG Airflow (5 tâches)
 │   ├── Dockerfile
 │   ├── docker-compose.yml
 │   ├── requirements.txt
